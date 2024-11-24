@@ -40,6 +40,25 @@ const options: NextAuthOptions = {
     }),
   ],
  
+  callbacks: {
+    async session({ session }) {
+      const dbUser = await prisma.user.findUnique({
+        where: { email: session.user?.email },
+      });
+
+      if (dbUser) {
+        session.user = {
+          id: dbUser.id.toString(),
+          email: dbUser.email,
+          name: dbUser.name,
+          role: dbUser.role,
+        };
+      }
+      return session;
+    },
+  },
+
+
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/auth/login",
