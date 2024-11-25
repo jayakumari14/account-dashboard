@@ -8,13 +8,13 @@ const Sidebar = () => (
         </a>
       </li>
       <li className="mb-4">
-        <a href="/auth/dashboard/expenses">Add Expense</a>
+        <a href="/dashboard/expenses">Add Expense</a>
       </li>
       <li className="mb-4">
-        <a href="/auth/dashboard/ledger">View Ledger</a>
+        <a href="/dashboard/ledger">View Ledger</a>
       </li>
       <li className="mb-4">
-        <a href="/auth/dashboard/reports">Generate Report</a>
+        <a href="/dashboard/reports">Generate Report</a>
       </li>
       <li className="mt-8">
         <a

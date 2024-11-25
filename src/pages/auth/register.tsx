@@ -115,10 +115,10 @@ const RegisterPage = () => {
           </button>
         </form>
         {message && (
-          <p className="text-center text-sm text-red-500 mt-4">{message}</p>
+          <p className="text-center text-sm text-green-600 mt-4">{message}</p>
         )}
         {error && (
-          <p className="text-center text-sm text-red-500 mt-4">{error}</p>
+          <p className="text-center text-sm text-red-600 mt-4">{error}</p>
         )}
       </div>
     </div>
