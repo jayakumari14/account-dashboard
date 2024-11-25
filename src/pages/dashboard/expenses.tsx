@@ -1,7 +1,5 @@
-// import ProtectedRoute from "../../components/ProtectedRoute";
-// import Sidebar from "../../components/Sidebar";
-// import Navbar from "../../components/Navbar";
 import { useState } from "react";
+import axios from "axios";
 
 const AddExpense = () => {
   const [form, setForm] = useState({
@@ -10,6 +8,7 @@ const AddExpense = () => {
     amount: "",
     date: "",
   });
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -20,19 +19,30 @@ const AddExpense = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/expenses", {
-        method: "POST",
+      console.log("Payload being sent:", form); // Debugging
+      const response = await axios.post("/api/expenses", form, {
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
       });
-      if (response.ok) {
+      if (response.status === 201) {
         alert("Expense added successfully!");
         setForm({ name: "", category: "", amount: "", date: "" });
       }
-    } catch (error) {
-      console.error("Error adding expense:", error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        // Axios error specific handling
+        console.error("Server error:", error.response?.data);
+        alert(`Error: ${error.response?.data.error || "Unknown server error"}`);
+      } else if (error instanceof Error) {
+        // General error handling
+        console.error("Error:", error.message);
+        alert(`Error: ${error.message}`);
+      } else {
+        console.error("Unexpected error:", error);
+        alert("An unexpected error occurred.");
+      }
     }
   };
+
   return (
     <div className="p-8 bg-white rounded shadow-md max-w-md mx-auto">
       <h1 className="text-2xl font-bold mb-4">Add Expense</h1>

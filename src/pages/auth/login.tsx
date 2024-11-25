@@ -1,38 +1,37 @@
 import { useState } from "react";
-import { useRouter } from "next/router"; // Import useRouter for navigation
+import { useRouter } from "next/router";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      // Handle successful login (store token, redirect, etc.)
-      localStorage.setItem("token", data.token); // Store JWT token
-      router.push("/auth/dashboard"); // Redirect to dashboard
-    } else {
-      // Handle error (e.g., invalid credentials)
-      alert(data.message);
+      const data = await response.json();
+      console.log("Response Data:", data);
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        console.log("Redirecting to dashboard...");
+        router.push("/auth/dashboard");
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+      alert("An error occurred. Please try again.");
     }
-
-    // Here, you can add the logic to verify the credentials using an API call or any other method
-    console.log("Email:", email);
-    console.log("Password:", password);
-
-    // if successful login, redirect to the home page or dashboard
-    router.push("/dashboard"); // Change this to the desired page after login
   };
 
   return (

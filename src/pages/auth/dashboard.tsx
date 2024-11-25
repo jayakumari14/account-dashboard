@@ -1,7 +1,42 @@
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
 
 const DashboardPage = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check if the user is authenticated
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      // Redirect to login page if no token is found
+      router.push("/auth/login");
+    } else {
+      // Optional: Validate the token with the server
+      fetch("/api/auth/validate-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            // Token is invalid; clear storage and redirect
+            localStorage.removeItem("token");
+            router.push("/auth/login");
+          }
+        })
+        .catch(() => {
+          // Handle server validation errors
+          localStorage.removeItem("token");
+          router.push("/auth/login");
+        });
+    }
+  }, [router]);
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
