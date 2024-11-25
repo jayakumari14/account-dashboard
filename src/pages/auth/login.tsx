@@ -1,14 +1,21 @@
 import { useState } from "react";
+import { useRouter } from "next/router"; // Import useRouter for navigation
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter(); // Initialize useRouter
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Add your login logic here (e.g., API call to authenticate user)
+
+    // Here, you can add the logic to verify the credentials using an API call or any other method
     console.log("Email:", email);
     console.log("Password:", password);
+
+    // After successful login, redirect to the home page or dashboard
+    // For example, redirect to the home page ("/") or a dashboard ("/dashboard")
+    router.push("/dashboard"); // Change this to the desired page after login
   };
 
   return (

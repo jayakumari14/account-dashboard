@@ -1,26 +1,20 @@
-import DashboardLayout from "../../components/DashboardLayout";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import Sidebar from "../../components/Sidebar";
+import Navbar from "../../components/Navbar";
 
-export default function AddExpense() {
+const ExpensesPage = () => {
   return (
-    <DashboardLayout>
-      <h1 className="text-xl font-bold">Add Expense</h1>
-      <form className="space-y-4">
-        <div>
-          <label htmlFor="amount" className="block">
-            Amount
-          </label>
-          <input id="amount" type="number" className="border p-2 w-full" />
+    <ProtectedRoute>
+      <div className="flex">
+        <Sidebar />
+        <div className="flex-1 p-8">
+          <Navbar />
+          <h1 className="text-3xl font-bold">Add Expense</h1>
+          {/* Form or components for adding expense */}
         </div>
-        <div>
-          <label htmlFor="description" className="block">
-            Description
-          </label>
-          <input id="description" type="text" className="border p-2 w-full" />
-        </div>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2">
-          Submit
-        </button>
-      </form>
-    </DashboardLayout>
+      </div>
+    </ProtectedRoute>
   );
-}
+};
+
+export default ExpensesPage;
