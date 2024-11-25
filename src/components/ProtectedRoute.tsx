@@ -1,24 +1,22 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 
-interface ProtectedRouteProps {
-  children: ReactNode;
-}
-
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { status } = useSession();
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/auth/login");
+      router.push("/auth/login"); // Redirect to login if not authenticated
     }
   }, [status, router]);
 
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <p>Loading...</p>; // Show loading state while checking session
   }
 
-  return <>{children}</>;
-}
+  return <>{session ? children : null}</>;
+};
+
+export default ProtectedRoute;
