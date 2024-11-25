@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Sidebar from "../../components/Sidebar";
 import Navbar from "../../components/Navbar";
+// import AddExpense from "../../components/AddExpense";
 
 const DashboardPage = () => {
   const router = useRouter();
@@ -55,6 +56,7 @@ const DashboardPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="p-6 bg-white rounded-lg shadow-md">
             <h2 className="font-bold text-xl text-gray-700">Add Expense</h2>
+
             <p className="text-gray-500 mt-2">
               Placeholder for add expense functionality.
             </p>

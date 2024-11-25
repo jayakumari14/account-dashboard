@@ -1,100 +1,122 @@
+// src/pages/dashboard/expenses.tsx
 import { useState } from "react";
-import axios from "axios";
+import { useRouter } from "next/router";
 
-const AddExpense = () => {
-  const [form, setForm] = useState({
-    name: "",
-    category: "",
-    amount: "",
-    date: "",
-  });
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
+const AddExpensePage = () => {
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [date, setDate] = useState("");
+  const [message, setMessage] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      console.log("Payload being sent:", form); // Debugging
-      const response = await axios.post("/api/expenses", form, {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (response.status === 201) {
-        alert("Expense added successfully!");
-        setForm({ name: "", category: "", amount: "", date: "" });
-      }
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        // Axios error specific handling
-        console.error("Server error:", error.response?.data);
-        alert(`Error: ${error.response?.data.error || "Unknown server error"}`);
-      } else if (error instanceof Error) {
-        // General error handling
-        console.error("Error:", error.message);
-        alert(`Error: ${error.message}`);
-      } else {
-        console.error("Unexpected error:", error);
-        alert("An unexpected error occurred.");
-      }
+
+    const expenseData = { name, category, amount, date };
+
+    const response = await fetch("/api/expenses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(expenseData),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      setMessage("Expense added successfully!"); // Show success message
+      setTimeout(() => router.push("/dashboard/ledger"), 1500); // Redirect after 1.5 seconds
+    } else {
+      setMessage(data.message || "Error adding expense");
     }
   };
 
   return (
-    <div className="p-8 bg-white rounded shadow-md max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Add Expense</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          value={form.name}
-          onChange={handleInputChange}
-          placeholder="Expense Name"
-          className="block w-full mb-4 p-2 border rounded"
-          required
-        />
-        <select
-          name="category"
-          value={form.category}
-          onChange={handleInputChange}
-          className="block w-full mb-4 p-2 border rounded"
-          required
-        >
-          <option value="">Select Category</option>
-          <option value="Food">Food</option>
-          <option value="Transport">Transport</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Other">Other</option>
-        </select>
-        <input
-          type="number"
-          name="amount"
-          value={form.amount}
-          onChange={handleInputChange}
-          placeholder="Amount"
-          className="block w-full mb-4 p-2 border rounded"
-          required
-        />
-        <input
-          type="date"
-          name="date"
-          value={form.date}
-          onChange={handleInputChange}
-          className="block w-full mb-4 p-2 border rounded"
-          required
-        />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-6 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-center text-2xl font-bold text-gray-800">
           Add Expense
-        </button>
-      </form>
+        </h2>
+        {message && (
+          <div
+            className={`text-center p-2 mt-4 ${
+              message.includes("successfully")
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            } border border-gray-300 rounded-md`}
+          >
+            {message}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+          <div className="flex flex-col">
+            <label htmlFor="name" className="text-gray-700 font-semibold">
+              Expense Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="mt-1 p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="category" className="text-gray-700 font-semibold">
+              Category
+            </label>
+            <input
+              type="text"
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              required
+              className="mt-1 p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="amount" className="text-gray-700 font-semibold">
+              Amount
+            </label>
+            <input
+              type="number"
+              id="amount"
+              value={amount}
+              onChange={(e) => setAmount(Number(e.target.value))}
+              required
+              className="mt-1 p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label htmlFor="date" className="text-gray-700 font-semibold">
+              Date
+            </label>
+            <input
+              type="date"
+              id="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+              className="mt-1 p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500"
+          >
+            Add Expense
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default AddExpense;
+export default AddExpensePage;
