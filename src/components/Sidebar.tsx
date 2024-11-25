@@ -3,16 +3,18 @@ const Sidebar = () => (
     <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
     <ul>
       <li className="mb-4">
-        <a href="/dashboard">Home</a>
+        <a href="/auth/dashboard" className="text-blue-500 hover:underline">
+          Home
+        </a>
       </li>
       <li className="mb-4">
-        <a href="/dashboard/expenses">Add Expense</a>
+        <a href="/auth/dashboard/expenses">Add Expense</a>
       </li>
       <li className="mb-4">
-        <a href="/dashboard/ledger">View Ledger</a>
+        <a href="/auth/dashboard/ledger">View Ledger</a>
       </li>
       <li className="mb-4">
-        <a href="/dashboard/reports">Generate Report</a>
+        <a href="/auth/dashboard/reports">Generate Report</a>
       </li>
       <li className="mt-8">
         <a
