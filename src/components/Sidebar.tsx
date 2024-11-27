@@ -1,30 +1,32 @@
+import Link from "next/link";
+
 const Sidebar = () => (
   <div className="w-64 bg-gray-800 text-white p-6">
     <h2 className="text-2xl font-bold mb-8">Dashboard</h2>
     <ul>
       <li className="mb-4">
-        <a href="/auth/dashboard" className="text-blue-500 hover:underline">
+        <Link href="/auth/dashboard" className="text-blue-500 hover:underline">
           Home
-        </a>
+        </Link>
       </li>
       <li className="mb-4">
-        <a href="/dashboard/expenses">Add Expense</a>
+        <Link href="/dashboard/expenses">Add Expense</Link>
       </li>
       <li className="mb-4">
-        <a href="/dashboard/ledger">View Ledger</a>
+        <Link href="/dashboard/ledger">View Ledger</Link>
       </li>
       <li className="mb-4">
-        <a href="/dashboard/reports">Generate Report</a>
+        <Link href="/dashboard/reports">Generate Report</Link>
       </li>
       <li className="mt-8">
-        <a
+        <Link
           href="/auth/login"
           onClick={() => {
             localStorage.removeItem("user");
           }}
         >
           Logout
-        </a>
+        </Link>
       </li>
     </ul>
   </div>
