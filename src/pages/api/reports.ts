@@ -1,30 +1,47 @@
-// src/pages/api/reports.ts
 import { NextApiRequest, NextApiResponse } from "next";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method Not Allowed" });
+// Mock data (replace with actual DB logic)
+const mockData = [
+  { category: "Food", amount: 120, date: "2024-11-01" },
+  { category: "Transport", amount: 80, date: "2024-11-02" },
+  { category: "Utilities", amount: 50, date: "2024-11-03" },
+  { category: "Food", amount: 150, date: "2024-11-05" }, // Added extra data for testing
+  { category: "Transport", amount: 90, date: "2024-11-06" },
+];
+
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  // Handle GET and POST requests
+  if (req.method === "GET") {
+    // Return all reports on GET request
+    res.status(200).json(mockData);
+  } else if (req.method === "POST") {
+    // Handle custom report generation via POST request
+    const { startDate, endDate, category } = req.body;
+
+    // Validate required fields
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: "Start date and end date are required" });
+    }
+
+    // Filter the mock data based on the provided dates and optional category
+    const filteredData = mockData.filter((entry) => {
+      const entryDate = new Date(entry.date);
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+
+      // Check if the entry falls within the date range and matches the category (if specified)
+      return (
+        entryDate >= start &&
+        entryDate <= end &&
+        (!category || entry.category === category) // Filter by category if provided
+      );
+    });
+
+    // Return the filtered data
+    res.status(200).json(filteredData);
+  } else {
+    // Handle unsupported HTTP methods
+    res.setHeader("Allow", ["GET", "POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
-
-  const {  startDate, endDate } = req.body;
-
-  // Mock data for demonstration
-  const mockExpenses = [
-    { id: 1, name: "Rent", category: "Housing", amount: 1200, date: "2024-11-01" },
-    { id: 2, name: "Groceries", category: "Food", amount: 250, date: "2024-11-10" },
-    { id: 3, name: "Electricity Bill", category: "Utilities", amount: 100, date: "2024-11-05" },
-  ];
-
-  // Filter data based on report type and date range
-  const filteredExpenses = mockExpenses.filter((expense) => {
-    const expenseDate = new Date(expense.date).getTime();
-    const start = new Date(startDate).getTime();
-    const end = new Date(endDate).getTime();
-
-    return expenseDate >= start && expenseDate <= end;
-  });
-
-  res.status(200).json(filteredExpenses);
-};
-
-export default handler;
+}
